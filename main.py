@@ -152,6 +152,7 @@ while True:
                         print("We don't have any unreserved seats\nPlease, try after some time\nThank You...")
                         feature.clr_scrren()
 
+
             elif admin_option == 2:
                 feature.clr_scrren()
                 reserved_seatNo = int(UserManager.UpdateSeatNo())
@@ -208,7 +209,7 @@ while True:
 
                     # Closing the connection
                     connection.close()
-
+                    
             elif admin_option == 6:
                 sleep(2.00)
                 print(Fore.GREEN + "\nYou have been logged out " + Fore.RESET, end="")
