@@ -71,9 +71,9 @@ while True:
 
                     # insert 20 rows in SeatManagement
                     # for i in range(1, 21):
-                    #     cursor.execute(all_queries.Query_1_1_1, (i,))
+                    #     cursor.execute(all_queries.INSERT_SEAT_NO_INTO_SEAT_MANAGEMENT, (i,))
 
-                    cursor.execute(all_queries.Query_1_1_2)
+                    cursor.execute(all_queries.COUNT_UNRESERVED_SEATS)
                     for i in cursor.fetchall():
                         for j in i:
                             count_unreserved_seats = j
@@ -115,20 +115,20 @@ while True:
 
                             # cursor.execute(Table_2)
 
-                            cursor.execute(all_queries.Query_1_1_3, student_signup_details)
+                            cursor.execute(all_queries.INSERT_STUDENT_INFO, student_signup_details)
 
-                            cursor.execute(all_queries.Query_1_1_4)
+                            cursor.execute(all_queries.SELECT_ONE_REGID_FROM_SEATMANGEMENT)
                             for i in cursor.fetchall():
                                 for j in i:
                                     book_seat_no = j
 
-                            cursor.execute(all_queries.Query_1_1_5.format(student_signup_details[3]))
+                            cursor.execute(all_queries.RESERVED_SEAT_FOR_NEW_STUDENT.format(student_signup_details[3]))
                             
                             sleep(2.00)
                             print(Fore.GREEN + "\nThank you for filling out our sign up form. We are glad that you joined us.\n" + Fore.RESET)
                             sleep(2.00)
 
-                            cursor.execute(all_queries.Query_1_1_6.format(book_seat_no))
+                            cursor.execute(all_queries.SHOW_NEW_STUDENT_INFO.format(book_seat_no))
 
                             print(tabulate(cursor.fetchall(), headers=["Reg Id", "Seat No", "Student Name", "Date of Joining"], tablefmt="grid", colalign=("center", "center", "center", "center")))
                             print("\nYou will be redirected automatically in admin section", end="")
@@ -162,11 +162,11 @@ while True:
                     connection = sqlite3.connect("library.db")
                     cursor = connection.cursor()
 
-                    cursor.execute(all_queries.Query_1_2_1)
+                    cursor.execute(all_queries.UNRESERVED_SEATS_LIST)
                     
                     if reserved_seatNo in [j for i in cursor.fetchall() for j in i]:
 
-                        cursor.execute(all_queries.Query_1_2_2.format(reserved_seatNo))
+                        cursor.execute(all_queries.SHOW_STUDENT_INFO_FOR_CONFIRMATION.format(reserved_seatNo))
                         print(tabulate(cursor.fetchall(), headers=["Seat No", "Reg Id", "Student Name", "Father Name", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center", "center", "center", "center", "center", "center")))
                         
                         while True:
@@ -179,13 +179,13 @@ while True:
 
                         if decision == "yes":
 
-                            cursor.execute(all_queries.Query_1_2_3.format(reserved_seatNo))
+                            cursor.execute(all_queries.REGID_FOR_STUDENT_EXIT.format(reserved_seatNo))
                             for i in cursor.fetchall():
                                 for j in i:
                                     StudentRegId = j
 
-                            cursor.execute(all_queries.Query_1_2_4.format(reserved_seatNo))
-                            cursor.execute(all_queries.Query_1_2_5, (curDate, StudentRegId))
+                            cursor.execute(all_queries.UPDATE_SEAT_NO_REGID.format(reserved_seatNo))
+                            cursor.execute(all_queries.INSERT_DATE_OF_LEAVING_INTO_SIGNUPTABLE, (curDate, StudentRegId))
 
                             sleep(2.00)
                             print(Fore.GREEN + "\nThanks for confirmation." + Fore.RESET)
@@ -209,7 +209,7 @@ while True:
 
                     # Closing the connection
                     connection.close()
-                    
+
             elif admin_option == 6:
                 sleep(2.00)
                 print(Fore.GREEN + "\nYou have been logged out " + Fore.RESET, end="")

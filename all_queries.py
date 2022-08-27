@@ -1,21 +1,22 @@
-Query_1_1_1 = "INSERT INTO SeatManagement (SeatNo) VALUES(?)"
+INSERT_SEAT_NO_INTO_SEAT_MANAGEMENT = "INSERT INTO SeatManagement (SeatNo) VALUES(?)"
 
-Query_1_1_2 = "SELECT count(SeatNo) FROM SeatManagement WHERE RegId IS NULL"
+COUNT_UNRESERVED_SEATS = "SELECT count(SeatNo) FROM SeatManagement WHERE RegId IS NULL"
 
-Query_1_1_3 = "INSERT INTO SignUpTable (StudentName, FatherName, DateOfBirth, MobileNo, AdhaarNo, DateOfJoining) VALUES (?, ?, ?, ?, ?, ?)"
+INSERT_STUDENT_INFO = "INSERT INTO SignUpTable (StudentName, FatherName, DateOfBirth, MobileNo, AdhaarNo, DateOfJoining) VALUES (?, ?, ?, ?, ?, ?)"
 
-Query_1_1_4 = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NULL LIMIT 1"
+SELECT_ONE_REGID_FROM_SEATMANGEMENT = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NULL LIMIT 1"
 
-Query_1_1_5 = "UPDATE SeatManagement SET RegId = {} WHERE SeatNo = (SELECT SeatNo FROM SeatManagement WHERE RegId IS NULL LIMIT 1)"
+RESERVED_SEAT_FOR_NEW_STUDENT = "UPDATE SeatManagement SET RegId = {} WHERE SeatNo = (SELECT SeatNo FROM SeatManagement WHERE RegId IS NULL LIMIT 1)"
 
-Query_1_1_6 = "SELECT RegId, SeatNo, StudentName, DateOfJoining FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
+SHOW_NEW_STUDENT_INFO = "SELECT RegId, SeatNo, StudentName, DateOfJoining FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
 
-Query_1_2_1 = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NOT NULL"
+UNRESERVED_SEATS_LIST = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NOT NULL"
 
-Query_1_2_2 = "SELECT SeatNo, RegId, StudentName, FatherName, DateOfJoining, DateOfLeaving FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
+SHOW_STUDENT_INFO_FOR_CONFIRMATION = "SELECT SeatNo, RegId, StudentName, FatherName, DateOfJoining, DateOfLeaving FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
 
-Query_1_2_3 = "SELECT RegId FROM SeatManagement WHERE SeatNo = {}"
+REGID_FOR_STUDENT_EXIT = "SELECT RegId FROM SeatManagement WHERE SeatNo = {}"
 
-Query_1_2_4 = "UPDATE SeatManagement SET RegId = NULL WHERE SeatNo = {}"
+UPDATE_SEAT_NO_REGID = "UPDATE SeatManagement SET RegId = NULL WHERE SeatNo = {}"
 
-Query_1_2_5 = f"UPDATE SignUpTable SET DateOfLeaving = ? WHERE MobileNo = ?"
+INSERT_DATE_OF_LEAVING_INTO_SIGNUPTABLE = "UPDATE SignUpTable SET DateOfLeaving = ? WHERE MobileNo = ?"
+
