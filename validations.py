@@ -46,3 +46,15 @@ class Validation:
         # Student Adhaar Number validation using regex
         adhaar_no_check = bool(re.fullmatch(constants.STUDENT_ADHAAR_NO_REGEX, AdhaarNo))
         return adhaar_no_check
+
+    def checkSeatNo(reserved_seat_no):
+
+        # Reserved Seat No validation using regex
+        seat_no_check = bool(re.fullmatch(constants.RESERVED_SEAT_NO_REGEX, reserved_seat_no))
+        return seat_no_check
+
+    def checkUserDecision(decision):
+
+        # User decision (yes|no) using regex
+        decision_check = bool(re.fullmatch(constants.USER_DECISION_REGEX, decision))
+        return decision_check
