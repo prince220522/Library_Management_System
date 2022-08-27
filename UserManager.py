@@ -3,10 +3,10 @@ from curDate_curTime import curDate
 from colorama import init, Fore
 init()
 
-# Section : Admin/Sign Up code
 class UserManager:
     def SignUp():
-
+        
+        # Section : Admin/Sign Up code
         print("~" * 41)
         print("|"+"\tNew Student (Sign Up)\t\t"+"|")
         print("~" * 41)
@@ -65,12 +65,24 @@ class UserManager:
         current_date = curDate
         
         return (student_name, father_name, student_dob, mobile_no, adhaar_no, current_date)
-        
-            
 
-        
+    def UpdateSeatNo():
 
+        # Section : Admin/Update Seat No code
+        print("\nWhich seat no do you want to update?")
+        while True:
+            try:
+                reserved_seat_no = input("Enter reserved seat no ->   ")
 
+                # using if...else block to check seat no valid or not
+                if Validation.checkSeatNo(reserved_seat_no):
+                    break
+                else:
+                    print(Fore.RED + "You entered invalid seat no. Try Again!" + Fore.RESET)
 
+            except Exception as error:
+                print(error)
 
+        return reserved_seat_no
 
+ 
