@@ -36,7 +36,7 @@ while True:
     if option == str(1):
         feature.clr_scrren()
         while True:
-            print(tabulate([["1", "Sign Up"], ["6", "Log Out"]], tablefmt="grid"))
+            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["6", "Log Out"]], tablefmt="grid"))
             while True:
                 try:
                     admin_option = int(input("Option -> "))
@@ -148,6 +148,9 @@ while True:
                     else:
                         print("We don't have any unreserved seats\nPlease, try after some time\nThank You...")
                         feature.clr_scrren()
+            
+            elif admin_option == 2:
+                pass
     
             elif admin_option == 6:
                 sleep(2.00)
