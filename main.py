@@ -1,19 +1,21 @@
 from time import sleep
 from tabulate import tabulate
 import sqlite3
+from datetime import datetime
 from colorama import init, Fore
-from UserManager import UserManager
 init()
+from UserManager import UserManager
 import feature
 from validations import Validation
 import all_queries
 
 # Section : Main Code
 feature.clr_scrren()
-
 def main_section():
     print("\nAre You?")
     print(tabulate([["1", "Admin"], ["2", "Student"]], tablefmt="grid"))
+
+curDate = datetime.today().strftime("%d/%m/%Y")
 
 while True:
     main_section()
@@ -36,7 +38,7 @@ while True:
     if option == str(1):
         feature.clr_scrren()
         while True:
-            print(tabulate([["1", "Sign Up"], ["6", "Log Out"]], tablefmt="grid"))
+            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["6", "Log Out"]], tablefmt="grid"))
             while True:
                 try:
                     admin_option = int(input("Option -> "))
@@ -45,6 +47,7 @@ while True:
                     print(Fore.RED + "Maybe you entered something wrong. Choose right one" + Fore.RESET)
 
             if admin_option == 1:
+                feature.clr_scrren()
                 print("\nFirst we will be checking unreserved seats", end="")
                 for _ in range(3):
                     sleep(1.00)
@@ -148,7 +151,64 @@ while True:
                     else:
                         print("We don't have any unreserved seats\nPlease, try after some time\nThank You...")
                         feature.clr_scrren()
-    
+
+            elif admin_option == 2:
+                feature.clr_scrren()
+                reserved_seatNo = int(UserManager.UpdateSeatNo())
+                print()
+                try:
+                    # make connection to SQLite database
+                    connection = sqlite3.connect("library.db")
+                    cursor = connection.cursor()
+
+                    cursor.execute(all_queries.Query_1_2_1)
+                    
+                    if reserved_seatNo in [j for i in cursor.fetchall() for j in i]:
+
+                        cursor.execute(all_queries.Query_1_2_2.format(reserved_seatNo))
+                        print(tabulate(cursor.fetchall(), headers=["Seat No", "Reg Id", "Student Name", "Father Name", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center", "center", "center", "center", "center", "center")))
+                        
+                        while True:
+                            decision = input("\nDo you want to update seat no (Yes/No)\t:\t").lower()
+
+                            if Validation.checkUserDecision(decision):
+                                break
+                            else:
+                                print(Fore.RED + "\nYou entered something wrong. Try Again!\n" + Fore.RESET)
+
+                        if decision == "yes":
+
+                            cursor.execute(all_queries.Query_1_2_3.format(reserved_seatNo))
+                            for i in cursor.fetchall():
+                                for j in i:
+                                    StudentRegId = j
+
+                            cursor.execute(all_queries.Query_1_2_4.format(reserved_seatNo))
+                            cursor.execute(all_queries.Query_1_2_5, (curDate, StudentRegId))
+
+                            sleep(2.00)
+                            print(Fore.GREEN + "\nThanks for confirmation." + Fore.RESET)
+                            feature.clr_scrren()
+                        else:
+                            sleep(2.00)
+                            print(Fore.GREEN + "\nThanks for confirmation." + Fore.RESET)
+                            feature.clr_scrren()
+
+                    else:
+                        sleep(2.00)
+                        print(Fore.RED + "Your seat number don't exist our database" + Fore.RESET)
+                        feature.clr_scrren()
+
+                except Exception as error:
+                    print(error)
+
+                finally:
+                    # Commit your changes in the database    
+                    connection.commit()
+
+                    # Closing the connection
+                    connection.close()
+
             elif admin_option == 6:
                 sleep(2.00)
                 print(Fore.GREEN + "\nYou have been logged out " + Fore.RESET, end="")
