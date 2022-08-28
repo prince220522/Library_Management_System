@@ -24,3 +24,7 @@ COUNT_NEW_JOINING_STUDENT = "SELECT count(StudentName) FROM SignUpTable WHERE Da
 
 DISPLAY_NEW_JOINING_STUDENT = "SELECT * FROM SignUpTable WHERE DateOfJoining = '{}'"
 
+COUNT_STUDENT_LEFT_THE_LIBRARY = "SELECT count(StudentName) FROM SignUpTable WHERE DateOfLeaving = '{}'"
+
+DISPLAY_LEAVING_STUDENT_DATA = "SELECT * FROM SignUpTable WHERE DateOfLeaving = '{}'"
+
