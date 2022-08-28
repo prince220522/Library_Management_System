@@ -38,7 +38,7 @@ while True:
     if option == str(1):
         feature.clr_scrren()
         while True:
-            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["6", "Log Out"]], tablefmt="grid"))
+            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["3", "Joining Student"], ["6", "Log Out"]], tablefmt="grid"))
             while True:
                 try:
                     admin_option = int(input("Option -> "))
@@ -48,10 +48,10 @@ while True:
 
             if admin_option == 1:
                 feature.clr_scrren()
-                print("\nFirst we will be checking unreserved seats", end="")
+                print(Fore.GREEN + "\nFirst we will be checking unreserved seats" + Fore.RESET, end="")
                 for _ in range(3):
                     sleep(1.00)
-                    print(".", end="")
+                    print(Fore.GREEN + "." + Fore.RESET, end="")
 
                 try:
                     # make connection to SQLite database
@@ -131,10 +131,10 @@ while True:
                             cursor.execute(all_queries.SHOW_NEW_STUDENT_INFO.format(book_seat_no))
 
                             print(tabulate(cursor.fetchall(), headers=["Reg Id", "Seat No", "Student Name", "Date of Joining"], tablefmt="grid", colalign=("center", "center", "center", "center")))
-                            print("\nYou will be redirected automatically in admin section", end="")
+                            print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
                             for _ in range(5, 0, -1):
                                 sleep(1.00)
-                                print(".", end="")
+                                print(Fore.GREEN + "." + Fore.RESET, end="")
 
                         except Exception as error:
                             print(error)
@@ -198,6 +198,45 @@ while True:
                     else:
                         sleep(2.00)
                         print(Fore.RED + "Your seat number don't exist our database" + Fore.RESET)
+                        feature.clr_scrren()
+
+                except Exception as error:
+                    print(error)
+
+                finally:
+                    # Commit your changes in the database    
+                    connection.commit()
+
+                    # Closing the connection
+                    connection.close()
+
+            elif admin_option == 3:
+                feature.clr_scrren()
+                try:
+                    # make connection to SQLite database
+                    connection = sqlite3.connect("library.db")
+                    cursor = connection.cursor()
+                    
+                    cursor.execute(all_queries.COUNT_NEW_JOINING_STUDENT.format(curDate))
+                    for i in cursor.fetchall():
+                        for j in i:
+                            count_new_joining_student = j
+                    
+                    if count_new_joining_student != 0:
+                        cursor.execute(all_queries.DISPLAY_NEW_JOINING_STUDENT.format(curDate))
+                        sleep(2.00)
+                        print(tabulate(cursor.fetchall(), headers=["Student Name", "Father Name", "DOB", "Mobile No", "Adhaar No", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center","center","center","center","center","center","center")))
+                        sleep(2.00)
+                        print(Fore.GREEN + "\n{}  -->  {} students have joined library".format(curDate, count_new_joining_student) + Fore.RESET)
+                        sleep(2.00)
+                        print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
+                        for _ in range(5, 0, -1):
+                            sleep(1.00)
+                            print(Fore.GREEN + "." + Fore.RESET, end="")
+                        feature.clr_scrren()
+                    else:
+                        sleep(2.00)
+                        print(Fore.RED + "\n{}  -->  No one have joined the library".format(curDate) + Fore.RESET)
                         feature.clr_scrren()
 
                 except Exception as error:
