@@ -38,7 +38,7 @@ while True:
     if option == str(1):
         feature.clr_scrren()
         while True:
-            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["3", "Joining Student"], ["6", "Log Out"]], tablefmt="grid"))
+            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["3", "Joining Student"], ["4", "Leaving Student"], ["6", "Log Out"]], tablefmt="grid"))
             while True:
                 try:
                     admin_option = int(input("Option -> "))
@@ -47,6 +47,8 @@ while True:
                     print(Fore.RED + "Maybe you entered something wrong. Choose right one" + Fore.RESET)
 
             if admin_option == 1:
+
+                # Section : Admin/Sign Up 
                 feature.clr_scrren()
                 print(Fore.GREEN + "\nFirst we will be checking unreserved seats" + Fore.RESET, end="")
                 for _ in range(3):
@@ -154,6 +156,8 @@ while True:
 
 
             elif admin_option == 2:
+
+                # Section : Admin/Update Seat No 
                 feature.clr_scrren()
                 reserved_seatNo = int(UserManager.UpdateSeatNo())
                 print()
@@ -211,6 +215,8 @@ while True:
                     connection.close()
 
             elif admin_option == 3:
+
+                # Section : Admin/New Joining Students the library
                 feature.clr_scrren()
                 try:
                     # make connection to SQLite database
@@ -237,6 +243,47 @@ while True:
                     else:
                         sleep(2.00)
                         print(Fore.RED + "\n{}  -->  No one have joined the library".format(curDate) + Fore.RESET)
+                        feature.clr_scrren()
+
+                except Exception as error:
+                    print(error)
+
+                finally:
+                    # Commit your changes in the database    
+                    connection.commit()
+
+                    # Closing the connection
+                    connection.close()
+
+            elif admin_option == 4:
+
+                # Section : Admin/Leaving Students the Library 
+                feature.clr_scrren()
+                try:
+                    # make connection to SQLite database
+                    connection = sqlite3.connect("library.db")
+                    cursor = connection.cursor()
+                    
+                    cursor.execute(all_queries.COUNT_STUDENT_LEFT_THE_LIBRARY.format(curDate))
+                    for i in cursor.fetchall():
+                        for j in i:
+                            count_student_left_library = j
+                    
+                    if count_student_left_library != 0:
+                        cursor.execute(all_queries.DISPLAY_LEAVING_STUDENT_DATA.format(curDate))
+                        sleep(2.00)
+                        print(tabulate(cursor.fetchall(), headers=["Student Name", "Father Name", "DOB", "Mobile No", "Adhaar No", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center","center","center","center","center","center","center")))
+                        sleep(2.00)
+                        print(Fore.GREEN + "\n{}  -->  {} students have left the library".format(curDate, count_student_left_library) + Fore.RESET)
+                        sleep(2.00)
+                        print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
+                        for _ in range(5, 0, -1):
+                            sleep(1.00)
+                            print(Fore.GREEN + "." + Fore.RESET, end="")
+                        feature.clr_scrren()
+                    else:
+                        sleep(2.00)
+                        print(Fore.RED + "\n{}  -->  No one have left the library".format(curDate) + Fore.RESET)
                         feature.clr_scrren()
 
                 except Exception as error:
