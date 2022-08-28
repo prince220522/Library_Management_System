@@ -20,3 +20,7 @@ UPDATE_SEAT_NO_REGID = "UPDATE SeatManagement SET RegId = NULL WHERE SeatNo = {}
 
 INSERT_DATE_OF_LEAVING_INTO_SIGNUPTABLE = "UPDATE SignUpTable SET DateOfLeaving = ? WHERE MobileNo = ?"
 
+COUNT_NEW_JOINING_STUDENT = "SELECT count(StudentName) FROM SignUpTable WHERE DateOfJoining = '{}'"
+
+DISPLAY_NEW_JOINING_STUDENT = "SELECT * FROM SignUpTable WHERE DateOfJoining = '{}'"
+
