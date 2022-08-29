@@ -85,4 +85,27 @@ class UserManager:
 
         return reserved_seat_no
 
+    def StudentAttendance():
+
+        # Section : Student/ Student_Attendance
+        while True:
+            try:
+                student_reg_id = input("\nEnter your RegId  -->  ")
+
+                # if user enter Q means (Quit) then you will be redirected in main scetion 
+                if student_reg_id != "Q":
+                    if Validation.checkMobileNo(student_reg_id):
+                        break
+                    else:
+                        print(Fore.RED + "You entered invalid RegId. Try Again!" + Fore.RESET)
+                else:
+                    return student_reg_id
+
+            except Exception as error:
+                print(error)
+
+        return student_reg_id
+
+
+
  
