@@ -37,3 +37,5 @@ INSERT_STUDENT_ATTENDANCE = "INSERT INTO StudentAttendance (RegId, InTime, Curre
 DISPLAY_STUDENT_ATTENDANCE = "SELECT SeatManagement.RegId, SeatManagement.SeatNo, SignUpTable.StudentName, StudentAttendance.InTime FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId INNER JOIN StudentAttendance ON SignUpTable.MobileNo = StudentAttendance.RegId WHERE StudentAttendance.RegId = {} AND StudentAttendance.CurrentDate = '{}'"
 
 STUDENT_ATTENDANCE_IN_TIME = "SELECT InTime FROM StudentAttendance WHERE RegId = {}"
+
+CURRENT_DATE_STUDENTS_ATTEDANCE = "SELECT SeatManagement.SeatNo , SeatManagement.RegId, StudentAttendance.InTime, StudentAttendance.CurrentDate FROM SeatManagement LEFT JOIN StudentAttendance ON SeatManagement.RegId = StudentAttendance.RegId AND StudentAttendance.CurrentDate = '{}' WHERE SeatManagement.RegId IS NOT NULL"
