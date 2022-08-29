@@ -15,6 +15,13 @@ def main_section():
     print("\nAre You?")
     print(tabulate([["1", "Admin"], ["2", "Student"]], tablefmt="grid"))
 
+def display_message():
+    sleep(2.00)
+    print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
+    for _ in range(5, 0, -1):
+        sleep(1.00)
+        print(Fore.GREEN + "." + Fore.RESET, end="")
+
 curDate = datetime.today().strftime("%d/%m/%Y")
 curTime = datetime.today().strftime("%H:%M:%S")
 
@@ -39,7 +46,7 @@ while True:
     if option == str(1):
         feature.clr_scrren()
         while True:
-            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["3", "Joining Student"], ["4", "Leaving Student"], ["6", "Log Out"]], tablefmt="grid"))
+            print(tabulate([["1", "Sign Up"], ["2", "Update Seat No"], ["3", "Joining Student"], ["4", "Leaving Student"], ["5", "Check Attendance"], ["6", "Log Out"]], tablefmt="grid"))
             while True:
                 try:
                     admin_option = int(input("Option -> "))
@@ -134,10 +141,7 @@ while True:
                             cursor.execute(all_queries.SHOW_NEW_STUDENT_INFO.format(book_seat_no))
 
                             print(tabulate(cursor.fetchall(), headers=["Reg Id", "Seat No", "Student Name", "Date of Joining"], tablefmt="grid", colalign=("center", "center", "center", "center")))
-                            print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
-                            for _ in range(5, 0, -1):
-                                sleep(1.00)
-                                print(Fore.GREEN + "." + Fore.RESET, end="")
+                            display_message()
 
                         except Exception as error:
                             print(error)
@@ -237,11 +241,7 @@ while True:
                         print(tabulate(cursor.fetchall(), headers=["Student Name", "Father Name", "DOB", "Mobile No", "Adhaar No", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center","center","center","center","center","center","center")))
                         sleep(2.00)
                         print(Fore.GREEN + "\n{}  -->  {} students have joined library".format(curDate, count_new_joining_student) + Fore.RESET)
-                        sleep(2.00)
-                        print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
-                        for _ in range(5, 0, -1):
-                            sleep(1.00)
-                            print(Fore.GREEN + "." + Fore.RESET, end="")
+                        display_message()
                         feature.clr_scrren()
                     else:
                         sleep(2.00)
@@ -279,16 +279,12 @@ while True:
                         print(tabulate(cursor.fetchall(), headers=["Student Name", "Father Name", "DOB", "Mobile No", "Adhaar No", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center","center","center","center","center","center","center")))
                         sleep(2.00)
                         print(Fore.GREEN + "\n{}  -->  {} students have left the library".format(curDate, count_student_left_library) + Fore.RESET)
-                        sleep(2.00)
-                        print(Fore.GREEN + "\nYou will be redirected automatically in admin section" + Fore.RESET, end="")
-                        for _ in range(5, 0, -1):
-                            sleep(1.00)
-                            print(Fore.GREEN + "." + Fore.RESET, end="")
+                        display_message()
                         feature.clr_scrren()
                     else:
                         sleep(2.00)
                         print(Fore.RED + "\n{}  -->  No one have left the library".format(curDate) + Fore.RESET)
-                        sleep(2.00)
+                        display_message()
                         feature.clr_scrren()
 
                 except Exception as error:
@@ -300,6 +296,32 @@ while True:
 
                     # Closing the connection
                     connection.close()
+
+            elif admin_option == 5:
+
+                # Section : Admin/check student attendance
+                feature.clr_scrren()
+                try:
+                    # make connection to SQLite database
+                    connection = sqlite3.connect("library.db")
+                    cursor = connection.cursor()
+
+                    cursor.execute(all_queries.CURRENT_DATE_STUDENTS_ATTEDANCE.format(curDate))
+                
+                    sleep(2.00)
+                    print(tabulate(cursor.fetchall(), headers=["Seat No", "Reg ID", "In Time", "Date"], tablefmt="grid", colalign=("center", "center", "center", "center")))
+                    display_message()
+     
+                except Exception as error:
+                    print(error)
+
+                finally:
+                    # Commit your changes in the database    
+                    connection.commit()
+
+                    # Closing the connection
+                    connection.close()
+                feature.clr_scrren()
 
             elif admin_option == 6:
                 sleep(2.00)
@@ -373,3 +395,6 @@ while True:
 
                 # Closing the connection
                 connection.close()
+
+
+
