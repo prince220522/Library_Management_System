@@ -16,6 +16,7 @@ def main_section():
     print(tabulate([["1", "Admin"], ["2", "Student"]], tablefmt="grid"))
 
 curDate = datetime.today().strftime("%d/%m/%Y")
+curTime = datetime.today().strftime("%H:%M:%S")
 
 while True:
     main_section()
@@ -50,10 +51,10 @@ while True:
 
                 # Section : Admin/Sign Up 
                 feature.clr_scrren()
-                print(Fore.GREEN + "\nFirst we will be checking unreserved seats" + Fore.RESET, end="")
+                print("\nFirst we will be checking unreserved seats" , end="")
                 for _ in range(3):
                     sleep(1.00)
-                    print(Fore.GREEN + "." + Fore.RESET, end="")
+                    print(".", end="")
 
                 try:
                     # make connection to SQLite database
@@ -151,6 +152,7 @@ while True:
                         feature.clr_scrren()
 
                     else:
+                        sleep(2.00)
                         print("We don't have any unreserved seats\nPlease, try after some time\nThank You...")
                         feature.clr_scrren()
 
@@ -166,7 +168,7 @@ while True:
                     connection = sqlite3.connect("library.db")
                     cursor = connection.cursor()
 
-                    cursor.execute(all_queries.UNRESERVED_SEATS_LIST)
+                    cursor.execute(all_queries.RESERVED_SEATS_LIST)
                     
                     if reserved_seatNo in [j for i in cursor.fetchall() for j in i]:
 
@@ -174,7 +176,7 @@ while True:
                         print(tabulate(cursor.fetchall(), headers=["Seat No", "Reg Id", "Student Name", "Father Name", "Date of Joining", "Date of Leaving"], tablefmt="grid", colalign=("center", "center", "center", "center", "center", "center")))
                         
                         while True:
-                            decision = input("\nDo you want to update seat no (Yes/No)\t:\t").lower()
+                            decision = input("\nDo you want to update seat no - {} (Yes/No)\t:\t".format(reserved_seatNo)).lower()
 
                             if Validation.checkUserDecision(decision):
                                 break
@@ -201,7 +203,8 @@ while True:
 
                     else:
                         sleep(2.00)
-                        print(Fore.RED + "Your seat number don't exist our database" + Fore.RESET)
+                        print(Fore.RED + "Your seat number don't exists our library system." + Fore.RESET)
+                        sleep(2.00)
                         feature.clr_scrren()
 
                 except Exception as error:
@@ -242,7 +245,8 @@ while True:
                         feature.clr_scrren()
                     else:
                         sleep(2.00)
-                        print(Fore.RED + "\n{}  -->  No one have joined the library".format(curDate) + Fore.RESET)
+                        print(Fore.RED + "\n{}  -->  No one have joined the library.".format(curDate) + Fore.RESET)
+                        sleep(2.00)
                         feature.clr_scrren()
 
                 except Exception as error:
@@ -284,6 +288,7 @@ while True:
                     else:
                         sleep(2.00)
                         print(Fore.RED + "\n{}  -->  No one have left the library".format(curDate) + Fore.RESET)
+                        sleep(2.00)
                         feature.clr_scrren()
 
                 except Exception as error:
@@ -308,9 +313,63 @@ while True:
                 print(Fore.RED + "You choose invalid option. Choose right one" + Fore.RESET)
 
     elif option == str(2):
-        print("Student scetion feature will be added soon")
+        
+        # Section : Students Attendance
         feature.clr_scrren()
-    
+        while True:
+            student_RegId = UserManager.StudentAttendance()
 
+            # if user enter Q means (Quit) then you will be redirected automatically in main scetion.
+            if student_RegId == "Q":
+                feature.clr_scrren()
+                break
+            try:
+                # make connection to SQLite database
+                connection = sqlite3.connect("library.db")
+                cursor = connection.cursor()
 
+                # CREATE_STUDENT_ATTENDANCE_RECORDS_TABLE = """CREATE TABLE StudentAttendance (
+                #                                         RegId TEXT NOT NULL,
+                #                                         InTime TEXT,
+                #                                         CurrentDate TEXT,
+                #                                         FOREIGN KEY(RegId) REFERENCES SignUpTable(MobileNo)
+                #                                     );"""
 
+                # cursor.execute(CREATE_STUDENT_ATTENDANCE_RECORDS_TABLE)
+
+                cursor.execute(all_queries.EXISTS_REG_ID_LIST)
+
+                if student_RegId in [j for i in cursor.fetchall() for j in i]:
+                    
+                    cursor.execute(all_queries.CHECK_REG_ID_IN_STUDENT_ATTENDANCE_TABLE.format(curDate))
+                    if student_RegId not in [j for i in cursor.fetchall() for j in i]:
+
+                        cursor.execute(all_queries.INSERT_STUDENT_ATTENDANCE, (student_RegId, curTime, curDate))
+                        cursor.execute(all_queries.DISPLAY_STUDENT_ATTENDANCE.format(student_RegId, curDate))
+                        sleep(2.00)
+                        print(tabulate(cursor.fetchall(), headers=["Reg ID", "Seat No", "Student Name", "In Time"], tablefmt="grid", colalign=("center","center","center","center")))
+                        sleep(2.00)
+                    else:
+                        cursor.execute(all_queries.STUDENT_ATTENDANCE_IN_TIME.format(student_RegId))
+                        for i in cursor.fetchall():
+                            for j in i:
+                                student_library_inTime = j
+                        sleep(2.00)
+                        print(Fore.RED + "\nYour attendance captured at {}, {}".format(student_library_inTime, curDate) + Fore.RESET)
+                        sleep(2.00)
+
+                else:
+                    sleep(2.00)
+                    print(Fore.RED + "\nThis RegId don't exists our library system." + Fore.RESET)
+
+                feature.clr_scrren()
+
+            except Exception as error:
+                print(error)
+
+            finally:
+                # Commit your changes in the database    
+                connection.commit()
+
+                # Closing the connection
+                connection.close()
