@@ -10,7 +10,7 @@ RESERVED_SEAT_FOR_NEW_STUDENT = "UPDATE SeatManagement SET RegId = {} WHERE Seat
 
 SHOW_NEW_STUDENT_INFO = "SELECT RegId, SeatNo, StudentName, DateOfJoining FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
 
-UNRESERVED_SEATS_LIST = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NOT NULL"
+RESERVED_SEATS_LIST = "SELECT SeatNo FROM SeatManagement WHERE RegId IS NOT NULL"
 
 SHOW_STUDENT_INFO_FOR_CONFIRMATION = "SELECT SeatNo, RegId, StudentName, FatherName, DateOfJoining, DateOfLeaving FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId WHERE SeatNo = {}"
 
@@ -28,3 +28,12 @@ COUNT_STUDENT_LEFT_THE_LIBRARY = "SELECT count(StudentName) FROM SignUpTable WHE
 
 DISPLAY_LEAVING_STUDENT_DATA = "SELECT * FROM SignUpTable WHERE DateOfLeaving = '{}'"
 
+EXISTS_REG_ID_LIST = "SELECT RegId FROM SeatManagement WHERE RegId IS NOT NULL"
+
+CHECK_REG_ID_IN_STUDENT_ATTENDANCE_TABLE = "SELECT RegId FROM StudentAttendance WHERE CurrentDate = '{}'"
+
+INSERT_STUDENT_ATTENDANCE = "INSERT INTO StudentAttendance (RegId, InTime, CurrentDate) VALUES (?, ?, ?)"
+
+DISPLAY_STUDENT_ATTENDANCE = "SELECT SeatManagement.RegId, SeatManagement.SeatNo, SignUpTable.StudentName, StudentAttendance.InTime FROM SignUpTable INNER JOIN SeatManagement ON SignUpTable.MobileNo = SeatManagement.RegId INNER JOIN StudentAttendance ON SignUpTable.MobileNo = StudentAttendance.RegId WHERE StudentAttendance.RegId = {} AND StudentAttendance.CurrentDate = '{}'"
+
+STUDENT_ATTENDANCE_IN_TIME = "SELECT InTime FROM StudentAttendance WHERE RegId = {}"
